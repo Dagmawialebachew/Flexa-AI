@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+# Install Tesseract + language packs
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-am \
+    libtesseract-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+
+    
+HEALTHCHECK NONE
+
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "main.py"]
